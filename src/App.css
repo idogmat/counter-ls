@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  background: #282c34;
+  height: 100vh;
 }
 
 .App-logo {
@@ -27,7 +29,55 @@
 .App-link {
   color: #61dafb;
 }
+.mainBlock{
+  display: flex;
+  flex-direction: column;
+  border: 3px solid #61dafb;
+  border-radius: 3px;
+  height: 50%;
+  width: 80%;
+  margin: auto;
+  box-sizing: border-box;
 
+}
+.counters{
+  width: 45%;
+  height: 45%;
+  display: flex;
+  flex-direction: column;
+  border:3px solid #61dafb;
+  border-radius: 3px;
+  margin: auto;
+}
+.countersBlock {
+  height: 15%;
+  display: flex;
+  justify-content: space-between;
+  margin: auto 10%;
+  font-size: 20px;
+  color: #61dafb;
+  font-weight: 800;
+}
+.counterTable{
+  display: flex;
+  justify-content: center;
+  border: 3px solid #61dafb;
+  height: 45%;
+  width: 50%;
+  color: #61dafb;
+  font-size: 45px;
+  align-content: center;
+  margin: auto;
+}
+.counters.error{
+  border: 3px solid red;
+}
+.error div{
+  color:red;
+}
+.inputError{
+  background: red;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
