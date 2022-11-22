@@ -1,38 +1,45 @@
-import React from 'react';
+import React, {useState} from 'react';
 import s from './InputOtCounter.module.css'
 type InputType={
     error:boolean
-    option:boolean
+    optionView:boolean
     inputError:boolean
-    counter:number
-    avgRange:{
-        max:number
-        min:number
-    }
+    count:number
+    startValue:number
+    endValue:number
+
     changeRange:(e:React.ChangeEvent<HTMLInputElement>)=>void
 }
 
 function InputOrCounter(props:InputType) {
 
+    const changerAvgRange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.currentTarget.id === 'max') {
+        props.changeRange(e)
+        } else {
+        props.changeRange(e)
+        }
+
+    }
     return (
         <> <div className={'counters' + ' ' + `${props.error && 'error'}`}>
-            {props.option ?
+            {props.optionView ?
                     <div className={'counterTable'}>
-                        {props.counter}
+                        {props.count}
                     </div>
                 :
                 <>
                 <div className={'countersBlock'}>
                     <label htmlFor="max">max value:</label><input
                     className={props.inputError ? s.inputError : ''} id={'max'}
-                          value={props.avgRange.max}
-                          onChange={(e) => props.changeRange(e)} type="number"/>
+                          value={props.endValue}
+                          onChange={(e) => changerAvgRange(e)} type="number"/>
                 </div>
                 <div className={'countersBlock'}>
                 <label htmlFor="min">min value:</label><input
                     className={props.inputError ? s.inputError : ''} id={'min'}
-                        value={props.avgRange.min}
-                        onChange={(e)=>props.changeRange(e)} type="number"/>
+                        value={props.startValue}
+                        onChange={(e)=>changerAvgRange(e)} type="number"/>
                 </div>
                 </>
             }

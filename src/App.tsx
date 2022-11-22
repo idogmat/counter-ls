@@ -3,6 +3,16 @@ import React, {useEffect, useState} from 'react';
 import './App.css';
 import Btn from "./components/Btn";
 import InputOrCounter from "./components/InputOrCounter";
+import {AppStateType} from "./store/store";
+import {
+  CounterStateType,
+  incrementAC, resetAC,
+  setCountValueAC,
+  setEndValueAC, setErrorAC,
+  setOptionViewAC,
+  setStartValueAC
+} from "./store/counterReducer";
+import {useDispatch, useSelector} from "react-redux";
 
 type RangeType = {
   max: number
@@ -10,121 +20,79 @@ type RangeType = {
 }
 
 function App() {
+  const {startValue, endValue, count, optionView,error} = useSelector<AppStateType, CounterStateType>(state => state.counterReducer)
+  const dispatch = useDispatch()
 
 
 
-  let [avgRange, setAwsCounters] = useState<RangeType>({max: 9, min: 1})
-  let [range, setRange] = useState<RangeType>(avgRange);
-  let [counter, setCounter] = useState<number>(range.min)
-  let [error, setError] = useState<boolean>(false)
+
+
+
+  // let [error, setError] = useState<boolean>(false)
   let [option, setOption] = useState<boolean>(true)
   let [inputError, setInputError] = useState<boolean>(false)
-  let c = 0;
-  let r:RangeType = {...range};
-  const changerAvgRange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.currentTarget.id === 'max') {
-      let aws = {...avgRange}
-      aws.max = +e.target.value
-      setAwsCounters({...aws})
-    } else {
-      let aws = {...avgRange}
-      aws.min = +e.target.value
-      setAwsCounters({...aws})
-    }
 
-  }
+
   const changeRange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (avgRange.min === avgRange.max) {
-      setInputError(true)
-      if (e.currentTarget.id === 'max' && +e.target.value > avgRange.max) {
-        let aws = {...avgRange}
-        aws.max = +e.target.value
-        setAwsCounters({...aws})
-        setInputError(false)
+    if (startValue === endValue) {
+      dispatch(setErrorAC(true))
+      if (e.currentTarget.id === 'max' && +e.target.value > startValue) {
+        dispatch(setEndValueAC(+e.target.value))
+        dispatch(setErrorAC(false))
       } else {
-        if (e.currentTarget.id === 'min' && +e.target.value < avgRange.min) {
-          let aws = {...avgRange}
-          aws.min = +e.target.value
-          setAwsCounters({...aws})
-          setInputError(false)
+        if (e.currentTarget.id === 'min' && +e.target.value < endValue) {
+          dispatch(setStartValueAC(+e.target.value))
+          dispatch(setErrorAC(false))
+        } else{
+          dispatch(setErrorAC(true))
         }
       }
     } else {
-      changerAvgRange(e)
+      if (e.currentTarget.id === 'max') {
+        dispatch(setEndValueAC(+e.target.value))
+      } else {
+        dispatch(setStartValueAC(+e.target.value))
+      }
     }
 
   }
-  const setOptionMenu = () => {
-    setOption(!option)
-  }
-
   const setMaxMinRange = () => {
-    if (avgRange.min >= avgRange.max || avgRange.max === counter) {
-      setError(true)
-    } else {
-      setError(false)
-      setCounter(avgRange.min)
-      setRange({...avgRange})
-      setOptionMenu()
-      localStorage.setItem('rangeMax',JSON.stringify(avgRange.max))
-      localStorage.setItem('rangeMin',JSON.stringify(avgRange.min))
+    if (!error) {
+      console.log(optionView,error)
+      dispatch(setCountValueAC(startValue))
+      dispatch(setOptionViewAC(!optionView))
+    } else if(error){
+      console.log(optionView,error)
+
     }
   }
   const increment = () => {
-    if (counter < range.max) {
-      let num = ++counter
-      setCounter(num)
+    if (count < endValue) {
+      dispatch(incrementAC())
     } else {
-      setError(true)
+      dispatch(setErrorAC(true))
     }
   }
   const reset = () => {
-    if (range.min <= range.max) {
-      setError(false)
-      setCounter(range.min)
+    if (startValue <= endValue) {
+      dispatch(setErrorAC(false))
+      dispatch(resetAC())
     }
   }
-  // const setToLocalStorageHandler = () => {
-  //   localStorage.setItem('counter',JSON.stringify(counter))
-  // }
-
-  const getFromLocalStorageHandler = () => {
-    let lsC=localStorage.getItem('counter')
-    let lsRMax=localStorage.getItem('rangeMax')
-    let lsRMin=localStorage.getItem('rangeMin')
-    if(lsC) {
-      setCounter(JSON.parse(lsC))
-      console.log()
-      c = JSON.parse(lsC);
-    }
-    if(lsRMax && lsRMin){
-      let obj:RangeType = {max:+lsRMax,min:+lsRMin}
-      setAwsCounters(obj)
-      setRange(obj)
-    }
-  }
-  useEffect(()=>{
-    getFromLocalStorageHandler()
-  },[])
-
-  useEffect(()=>{
-    localStorage.setItem('counter',JSON.stringify(c ? c : counter))
-    c = 0;
-  },[counter])
-
   return (
     <div className="App">
       <div className={'mainBlock'}>
-        <InputOrCounter option={option}
+        <InputOrCounter optionView={optionView}
                         changeRange={changeRange}
-                        counter={counter}
-                        avgRange={avgRange}
+                        count={count}
+                        startValue={startValue}
+                        endValue={endValue}
                         error={error}
                         inputError={inputError}/>
         <div className={'counterTable'}>
-          {option
+          {optionView
             ? <>
-              <Btn title={'set'} callBack={setOptionMenu}></Btn>
+              <Btn title={'set'} callBack={setMaxMinRange}></Btn>
               <Btn error={error} title={'inc'} callBack={increment}></Btn>
               <Btn title={'reset'} callBack={reset}></Btn>
             </>
