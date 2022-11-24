@@ -1,11 +1,12 @@
 .App {
   text-align: center;
   background: #282c34;
-  height: 100vh;
+  min-height: 100vh;
+  display: flex;
 }
 
 .App-logo {
-  height: 40vmin;
+  min-height: 40vmin;
   pointer-events: none;
 }
 

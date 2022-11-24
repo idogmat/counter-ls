@@ -14,25 +14,28 @@ import {
 } from "./store/counterReducer";
 import {useDispatch, useSelector} from "react-redux";
 
-type RangeType = {
-  max: number
-  min: number
-}
-
 function App() {
-  const {startValue, endValue, count, optionView,error} = useSelector<AppStateType, CounterStateType>(state => state.counterReducer)
+  let start =localStorage.getItem('startValue')
+  let end =localStorage.getItem('endValue')
+  let countLs =localStorage.getItem('count')
+  useEffect(()=>{
+
+    if(start && end && countLs) {
+      dispatch(setStartValueAC(+start))
+      dispatch(setEndValueAC(+end))
+      dispatch(setCountValueAC(+countLs))
+    }
+  },[])
+  const {startValue, endValue, count, optionView, error} = useSelector<AppStateType, CounterStateType>(state => state.counterReducer)
   const dispatch = useDispatch()
-
-
-
-
-
-
-  // let [error, setError] = useState<boolean>(false)
-  let [option, setOption] = useState<boolean>(true)
   let [inputError, setInputError] = useState<boolean>(false)
 
 
+useEffect(()=>{
+ localStorage.setItem('startValue',startValue.toString())
+ localStorage.setItem('endValue',endValue.toString())
+ localStorage.setItem('count',count.toString())
+},[startValue,endValue,count])
   const changeRange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (startValue === endValue) {
       dispatch(setErrorAC(true))
