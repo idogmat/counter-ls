@@ -15,17 +15,16 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 
 function App() {
-  let start =localStorage.getItem('startValue')
-  let end =localStorage.getItem('endValue')
-  let countLs =localStorage.getItem('count')
-  useEffect(()=>{
 
-    if(start && end && countLs) {
-      dispatch(setStartValueAC(+start))
-      dispatch(setEndValueAC(+end))
-      dispatch(setCountValueAC(+countLs))
-    }
-  },[])
+  // useEffect(()=>{
+  //
+  //
+  //   if(start && end && countLs) {
+  //     dispatch(setStartValueAC(+JSON.parse(start)))
+  //     dispatch(setEndValueAC(+JSON.parse(end)))
+  //     dispatch(setCountValueAC(+JSON.parse(countLs)))
+  //   }
+  // },[])
   const {startValue, endValue, count, optionView, error} = useSelector<AppStateType, CounterStateType>(state => state.counterReducer)
   const dispatch = useDispatch()
   let [inputError, setInputError] = useState<boolean>(false)
