@@ -14,12 +14,7 @@ type InputType={
 function InputOrCounter(props:InputType) {
 
     const changerAvgRange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.currentTarget.id === 'max') {
         props.changeRange(e)
-        } else {
-        props.changeRange(e)
-        }
-
     }
     return (
         <> <div className={'counters' + ' ' + `${props.error && 'error'}`}>
